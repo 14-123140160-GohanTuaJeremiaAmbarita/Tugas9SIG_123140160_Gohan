@@ -5,7 +5,6 @@ const api = axios.create({
   timeout: 10000,
 });
 
-// Interceptor Request: Masukkan Token ke Header secara otomatis jika tersedia
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -16,4 +15,5 @@ api.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
+// Baris krusial wajib ada agar tidak crash layar hitam
 export default api;

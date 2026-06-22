@@ -50,14 +50,16 @@ async def update_fasilitas(id: int, data: FasilitasCreate, current_user: str = D
     async with pool.acquire() as conn:
         row = await conn.fetchrow("""
             UPDATE fasilitas SET
-                nama = $2, jenis = $3, alamat = $4,
+                nama = $2, 
+                jenis = $3, 
+                alamat = $4,
                 geom = ST_SetSRID(ST_Point($5, $6), 4326)
             WHERE id = $1
             RETURNING id, nama, jenis
         """, id, data.nama, data.jenis, data.alamat, data.longitude, data.latitude)
         
         if not row:
-            raise HTTPException(status_code=404, detail="Data tidak ditemukan.")
+            raise HTTPException(status_code=404, detail="Data tidak ditemukan")
         return dict(row)
 
 @router.delete("/{id}", status_code=204)
@@ -66,5 +68,5 @@ async def delete_fasilitas(id: int, current_user: str = Depends(get_current_user
     async with pool.acquire() as conn:
         result = await conn.execute("DELETE FROM fasilitas WHERE id = $1", id)
         if result == "DELETE 0":
-            raise HTTPException(status_code=404, detail="Data tidak ditemukan.")
+            raise HTTPException(status_code=404, detail="Data tidak ditemukan")
         return None

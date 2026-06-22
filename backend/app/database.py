@@ -9,6 +9,8 @@ pool = None
 async def get_pool():
     global pool
     if pool is None:
+        if not DATABASE_URL:
+            raise ValueError("DATABASE_URL tidak ditemukan di file .env")
         pool = await asyncpg.create_pool(
             DATABASE_URL,
             min_size=5,

@@ -1,18 +1,18 @@
 import { createContext, useState, useContext } from 'react';
-import api from '../services/api';
+import api from '../config/api';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  // Cek token langsung saat inisialisasi awal state (Lazy Initialization)
   const [user, setUser] = useState(() => {
     const token = localStorage.getItem('token');
     return token ? { authenticated: true } : null;
   });
 
-  const login = async (email, password) => {
+  const login = async (username, password) => {
     const formData = new URLSearchParams();
-    formData.append('username', email);
+    // Menggunakan username agar sinkron dengan backend FastAPI kamu
+    formData.append('username', username);
     formData.append('password', password);
 
     const res = await api.post('/api/auth/login', formData, {
