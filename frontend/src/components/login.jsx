@@ -1,36 +1,52 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/authcontext';
 
 export default function Login({ onLoginSuccess }) {
   const { login } = useAuth();
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(''); // Bersihkan error lama
     try {
-      await login(email, password);
+      // Memanggil fungsi login simulasi dari authcontext
+      await login(username, password);
       onLoginSuccess();
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login Gagal.');
+      setError(err.response?.data?.detail || 'Username atau password salah.');
     }
   };
 
   return (
-    <div className="login-container" style={{ padding: '20px', maxWidth: '400px', margin: 'auto' }}>
-      <h2>Admin Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+    <div style={{ padding: '20px', maxWidth: '400px', margin: '100px auto', background: '#fff', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+      <h2 style={{ color: '#333', textAlign: 'center', marginBottom: '20px' }}>Admin Login</h2>
+      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={e => setEmail(e.target.value)} required style={{ width: '100%', marginBottom: '10px' }} />
+        <div style={{ marginBottom: '15px' }}>
+          <label style={{ display: 'block', marginBottom: '5px', color: '#666' }}>Username:</label>
+          <input 
+            type="text" 
+            value={username} 
+            onChange={e => setUsername(e.target.value)} 
+            required 
+            style={{ width: '100%', padding: '8px', boxSizing: 'border-box', border: '1px solid #ccc', borderRadius: '4px' }} 
+          />
         </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={e => setPassword(e.target.value)} required style={{ width: '100%', marginBottom: '10px' }} />
+        <div style={{ marginBottom: '20px' }}>
+          <label style={{ display: 'block', marginBottom: '5px', color: '#666' }}>Password:</label>
+          <input 
+            type="password" 
+            value={password} 
+            onChange={e => setPassword(e.target.value)} 
+            required 
+            style={{ width: '100%', padding: '8px', boxSizing: 'border-box', border: '1px solid #ccc', borderRadius: '4px' }} 
+          />
         </div>
-        <button type="submit" style={{ width: '100%', padding: '10px', background: '#4CAF50', color: 'white', border: 'none' }}>Login</button>
+        <button type="submit" style={{ width: '100%', padding: '10px', background: '#008CBA', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          Masuk
+        </button>
       </form>
     </div>
   );

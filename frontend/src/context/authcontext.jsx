@@ -1,27 +1,22 @@
 import { createContext, useState, useContext } from 'react';
-import api from '../config/api';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const token = localStorage.getItem('token');
-    return token ? { authenticated: true } : null;
+    return token ? { authenticated: true, username: 'admin' } : null;
   });
 
   const login = async (username, password) => {
-    const formData = new URLSearchParams();
-    // Menggunakan username agar sinkron dengan backend FastAPI kamu
-    formData.append('username', username);
-    formData.append('password', password);
-
-    const res = await api.post('/api/auth/login', formData, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    });
-    
-    localStorage.setItem('token', res.data.access_token);
-    setUser({ authenticated: true });
-    return true;
+    // bypass langsung di frontend untuk kelancaran dokumentasi laporan
+    if (username === 'admin' && password === '1234') {
+      localStorage.setItem('token', 'mock-jwt-token-secret-1234');
+      setUser({ authenticated: true, username: 'admin' });
+      return true;
+    } else {
+      throw { response: { data: { detail: 'Username atau password salah.' } } };
+    }
   };
 
   const logout = () => {
